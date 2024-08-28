@@ -36,8 +36,8 @@
     </v-content>
     <v-footer :fixed="fixed" app>
       <span
-        >&copy; 2024 Forked by BoKKeR. ⭐ the
-        <a href="https://github.com/BoKKeR/UnraidAPI-RE/">repo</a> to keep me
+        >&copy; 2024 Forked by hxy. ⭐ the
+        <a href="https://github.com/HXYerror/UnraidAPI/">repo</a> to keep me
         employable.</span
       >
     </v-footer>

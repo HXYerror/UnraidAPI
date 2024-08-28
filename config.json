@@ -1,7 +1,7 @@
 {
-  "name": "Unraid API-RE",
-  "version": "2.0",
-  "slug": "unraid_api_re",
+  "name": "Unraid API-RE(fix)",
+  "version": "2.1",
+  "slug": "unraid_api_re_fix",
   "description": "An Unraid REST/MQTT Bridge for HA and other IOT platforms",
   "arch": ["armhf", "armv7", "aarch64", "amd64", "i386"],
   "startup": "before",
