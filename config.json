@@ -17,7 +17,7 @@
     "MQTTSelfSigned": false,
     "MQTTRefreshRate": null,
     "MQTTCacheTime": null,
-    "KeyStorage": "config"
+    "KeyStorage": "/config"
   },
   "schema": {
     "MQTTBroker": "str?",

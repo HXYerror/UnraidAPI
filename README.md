@@ -94,21 +94,3 @@ The **payload options** are **started, stopped, paused, restart, kill, hibernate
 ```
 
 When connecting the unraid api to an mqtt broker config details for all the various api functions are posted under the various homeassistant entity types. For example under **homeassistant/switch/server/vm/config**.
-
-<picture>
-  <source
-    srcset="
-      https://api.star-history.com/svg?repos=bokker/UnraidAPI-RE&type=Date&theme=dark
-    "
-  />
-  <source
-    media="(prefers-color-scheme: light)"
-    srcset="
-      https://api.star-history.com/svg?repos=bokker/UnraidAPI-RE&type=Date
-    "
-  />
-  <img
-    alt="Star History Chart"
-    src="https://api.star-history.com/svg?repos=bokker/UnraidAPI-RE&type=Date"
-  />
-</picture>

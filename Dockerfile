@@ -1,11 +1,11 @@
 FROM node:16
 
 ENV NODE_ENV=production
-ENV HOST 0.0.0.0
-ENV PORT 80
+ENV HOST=0.0.0.0
+ENV PORT=80
 ENV NODE_OPTIONS="--max_old_space_size=4096"
 
-ENV APP_ROOT /app
+ENV APP_ROOT=/app
 
 RUN mkdir -p ${APP_ROOT}
 COPY . ${APP_ROOT}

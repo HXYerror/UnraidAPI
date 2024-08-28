@@ -1,0 +1,13 @@
+{
+    "MQTTBroker": "192.168.100.233",
+    "MQTTPort": 1883,
+    "MQTTUser": "user",
+    "MQTTPass": "pass",
+    "MQTTBaseTopic": "homeassistant",
+    "MQTTSecure": false,
+    "MQTTSelfSigned": false,
+    "MQTTRefreshRate": 20,
+    "MQTTCacheTime": 60,
+    "KeyStorage": "/config"
+  }
+  

@@ -1,4 +1,17 @@
-export default {
+import fs from "fs";
+try {
+  const haOptions = JSON.parse(
+    fs.readFileSync("/data/options.json").toString()
+  );
+  Object.keys(haOptions).forEach((key) => {
+    process.env[key] = haOptions[key];
+  });
+  console.log("Successfully loaded HA options.");
+} catch (e) {
+  console.log("No HA options found.");
+}
+
+const getConfig = () => ({
   MQTTBroker: process.env.MQTTBroker,
   RetainMessages: process.env.RetainMessages === "true",
   MQTTBaseTopic: process.env.MQTTBaseTopic,
@@ -18,4 +31,7 @@ export default {
     rejectUnauthorized: process.env.MQTTSelfSigned !== "true", // Determine if self-signed certificates are rejected
     secure: process.env.MQTTSecure === "true"
   }
-};
+});
+
+export default getConfig;
+

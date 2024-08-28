@@ -7,7 +7,6 @@ import {
   getCSRFToken,
   getUnraidDetails
 } from "../utils/Unraid";
-import fs from "fs";
 import { attachUSB, detachUSB } from "../api/usbAttach";
 import uniqid from "uniqid";
 import sanitise from "./../utils/sanitiseName";
@@ -19,25 +18,16 @@ import {
   VmDetail
 } from "~/types/server";
 import { DockerDetail, UsbData } from "~/types/json-server";
-import env from "./../constants/env";
+import getConfig from "./../constants/env";
 
 let retry;
 
 let updated = {};
+const env = getConfig();
 
 const keyPath = `${env.KeyStorage}/mqttKeys`;
 
 export default function startMQTTClient() {
-  try {
-    const haOptions = JSON.parse(
-      fs.readFileSync("/data/options.json").toString()
-    );
-    Object.keys(haOptions).forEach((key) => {
-      process.env[key] = haOptions[key];
-    });
-  } catch (e) {
-    //do nothing
-  }
   if (!env.MQTTBroker) {
     console.log("mqtt disabled");
     return;
