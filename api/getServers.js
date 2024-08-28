@@ -12,6 +12,7 @@ export default function(req, res, next) {
     }
     fs.writeFileSync("config/servers.json", JSON.stringify(servers, null, 2));
   }
+  //TODO: why need this?
   if (
     (!req.headers.authorization ||
       Object.keys(req.headers.authorization).length <
@@ -28,9 +29,7 @@ export default function(req, res, next) {
   let response = {};
   response.servers = servers;
 
-  if (
-    process.env.KeyStorage === "config" &&
-    (!req.headers.authorization || req.headers.authorization.length <= 2)
+  if (!req.headers.authorization || req.headers.authorization.length <= 2
   ) {
     req.headers.authorization = fs.readFileSync(
       `${

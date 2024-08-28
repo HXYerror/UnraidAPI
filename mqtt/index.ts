@@ -1,3 +1,4 @@
+import fs from "fs";
 import { connect, ClientOptions, MqttClient } from "mqtt";
 import {
   changeArrayState,
@@ -54,6 +55,10 @@ export default function startMQTTClient() {
 
     // Create MQTT client instance
     const client: MqttClient = connect(mqttUrl, options);
+
+    if (!fs.existsSync("config/mqttDisabledDevices.json")) {
+      fs.writeFileSync("config/mqttDisabledDevices.json", JSON.stringify([]));
+    }
 
     client.on(
       "connect",
