@@ -105,7 +105,7 @@ export default {
             this.getServers();
           } else {
             this.servers = response.data.servers;
-            setTimeout(() => this.getServers(), 5000);
+            setTimeout(() => this.getServers(), 10000);
           }
         })
         .catch((e) => {

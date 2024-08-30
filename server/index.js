@@ -15,7 +15,8 @@ async function start() {
     host = process.env.HOST || "0.0.0.0",
     port = process.env.PORT || 3000
   } = nuxt.options.server;
-
+  process.env['KeyStorage'] = "config";
+  
   // Build only in dev mode
   if (config.dev) {
     const builder = new Builder(nuxt);

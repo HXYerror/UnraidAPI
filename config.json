@@ -1,6 +1,6 @@
 {
   "name": "Unraid API-RE(fix)",
-  "version": "2.2.1",
+  "version": "2.3",
   "slug": "unraid_api_re_fix",
   "description": "An Unraid REST/MQTT Bridge for HA and other IOT platforms",
   "arch": ["armhf", "armv7", "aarch64", "amd64", "i386"],
@@ -16,8 +16,7 @@
     "MQTTSecure": false,
     "MQTTSelfSigned": false,
     "MQTTRefreshRate": null,
-    "MQTTCacheTime": null,
-    "KeyStorage": "/config"
+    "MQTTCacheTime": null
   },
   "schema": {
     "MQTTBroker": "str?",
@@ -28,8 +27,7 @@
     "MQTTSecure": "bool?",
     "MQTTSelfSigned": "bool?",
     "MQTTRefreshRate": "int?",
-    "MQTTCacheTime": "int?",
-    "KeyStorage": "str?"
+    "MQTTCacheTime": "int?"
   },
   "ports": {
     "80/tcp": 3005

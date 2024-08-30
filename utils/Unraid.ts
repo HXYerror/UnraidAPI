@@ -37,15 +37,22 @@ axios.defaults.httpsAgent = new https.Agent({
 const authCookies = {};
 
 export async function getImage(servers: RootServerJSONConfig, res, path) {
-  const serverAuth = JSON.parse(
-    fs
-      .readFileSync(
-        `${
-          process.env.KeyStorage ? `${process.env.KeyStorage}/` : "secure/"
-        }mqttKeys`
-      )
-      .toString()
-  );
+  const serverAuth = "";
+  if(fs.existsSync("config/mqttKeys")) {
+    const serverAuth = JSON.parse(
+      fs
+        .readFileSync(
+          `${
+            process.env.KeyStorage ? `${process.env.KeyStorage}/` : "secure/"
+          }mqttKeys`
+        )
+        .toString()
+    );
+  }else{
+    return res.status(404).send("No server auth found");
+  }
+
+
   await logIn(servers, serverAuth);
   let sent = false;
 

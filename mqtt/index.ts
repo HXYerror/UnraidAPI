@@ -29,6 +29,10 @@ const env = getConfig();
 const keyPath = `${env.KeyStorage}/mqttKeys`;
 
 export default function startMQTTClient() {
+  if (!fs.existsSync("config/")) {
+    fs.mkdirSync("config/");
+  }
+
   if (!env.MQTTBroker) {
     console.log("mqtt disabled");
     return;
@@ -47,7 +51,10 @@ export default function startMQTTClient() {
       password: password,
       port: port,
       host: host,
-      rejectUnauthorized: rejectUnauthorized
+      rejectUnauthorized: rejectUnauthorized,
+      keepalive: 60,
+      reconnectPeriod: 10000,
+      clientId: "mqttjs_" + Math.random().toString(16).substr(2, 8)
     };
 
     const mqttProtocol = secure ? "mqtts://" : "mqtt://";
@@ -56,6 +63,8 @@ export default function startMQTTClient() {
     // Create MQTT client instance
     const client: MqttClient = connect(mqttUrl, options);
 
+    //console.log(options);
+
     if (!fs.existsSync("config/mqttDisabledDevices.json")) {
       fs.writeFileSync("config/mqttDisabledDevices.json", JSON.stringify([]));
     }
@@ -63,6 +72,7 @@ export default function startMQTTClient() {
     client.on(
       "connect",
       () => {
+        console.log("Connected to MQTT.");
         client.subscribe(`${env.MQTTBaseTopic}/bridge/state`);
         updateMQTT(client);
         if (repeater) {
@@ -350,6 +360,18 @@ export default function startMQTTClient() {
     client.on("error", function(error) {
       console.log(`Can't connect${error}`);
     });
+
+    client.on('close', () => {
+      console.log('Disconnected from MQTT broker');
+    });
+
+    client.on('reconnect', () => {
+      console.log('Reconnecting to MQTT broker...');
+    });
+    
+    client.on('offline', () => {
+      console.log('Client is offline');
+    });
   } catch (e) {
     if (
       e.toString().includes("no such file or directory, open") &&
@@ -372,6 +394,7 @@ export default function startMQTTClient() {
 
 function updateMQTT(client) {
   try {
+    console.log("updataMQTT with UnraidDetails")
     const keys = JSON.parse(fs.readFileSync(keyPath).toString());
     const servers: RootServerJSONConfig = JSON.parse(
       fs.readFileSync("config/servers.json").toString()
@@ -448,6 +471,7 @@ function getServerDetails(
   }
 
   if (updated[ip].details !== JSON.stringify(server.serverDetails)) {
+    console.log("MQTT: Updating server details");
     const serverDevice = {
       identifiers: [serverTitleSanitised],
       name: `${serverTitleSanitised}_server`,

@@ -31,11 +31,16 @@ export default function(req, res, next) {
 
   if (!req.headers.authorization || req.headers.authorization.length <= 2
   ) {
-    req.headers.authorization = fs.readFileSync(
-      `${
-        process.env.KeyStorage ? `${process.env.KeyStorage}/` : "secure/"
-      }mqttKeys`
-    );
+    if(fs.existsSync('config/mqttKeys')){
+      req.headers.authorization = fs.readFileSync(
+        `${
+          process.env.KeyStorage ? `${process.env.KeyStorage}/` : "secure/"
+        }mqttKeys`
+      );
+    }else{
+      console.log("plese login first in UI");
+    }
+
   }
 
   getUnraidDetails(response.servers, JSON.parse(req.headers.authorization));
