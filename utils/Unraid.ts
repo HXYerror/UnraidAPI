@@ -977,6 +977,7 @@ export async function changeVMState(
   auth: string,
   token: string
 ) {
+  console.log("debug log[changeVMState]:"+ action + " "+ id);
   if (!token) {
     token = (await getCSRFToken(server, auth)) as string;
     console.log(`Got new CSRF_token: ${token}`);

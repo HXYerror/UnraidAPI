@@ -163,6 +163,8 @@ export default function startMQTTClient() {
       const responses = [];
 
       if (topic.toLowerCase().includes("state")) {
+        console.log("debug log[receive message]:" + message.toString())
+        console.log("debug log[vm now status]:"+ vmDetails.name + " " + vmDetails.id + " status:"+vmDetails.status)
         let command: DockerAction | VMAction;
         switch (message.toString()) {
           case "started":
@@ -210,13 +212,12 @@ export default function startMQTTClient() {
               ? vmDetails.edit.nics[0].mac
               : undefined
           };
-          console.log(`Updating MQTT for: ${queryID}`);
+          console.log("debug log[send message]:" + JSON.stringify(vmDetailsToSend));
           client.publish(
             `${env.MQTTBaseTopic}/${serverTitleSanitised}/${vmSanitisedName}`,
             JSON.stringify(vmDetailsToSend),
             { retain: env.RetainMessages }
           );
-
           responses.push(
             await changeVMState(vmIdentifier, command, ip, keys[ip], token)
           );
@@ -651,13 +652,45 @@ function getVMDetails(
     updated[ip].vms = {};
   }
 
+//   case "started":
+//     if (
+//       vmDetails.status === "paused" ||
+//       vmDetails.status === "pmsuspended" ||
+//       dockerDetails.status === "paused"
+//     ) {
+//       command = "domain-resume";
+//     } else {
+//       command = "domain-start";
+//     }
+//     break;
+
+//   case "stopped":
+//     command = "domain-stop";
+//     break;
+//   case '"stopped"':
+//     command = "domain-stop";
+//     break;
+//   case "paused":
+//     command = "domain-pause";
+//     break;
+//   case "kill":
+//     command = "domain-destroy";
+//     break;
+//   case "restart":
+//     command = "domain-restart";
+//     break;
+//   case "hibernate":
+//     command = "domain-pmsuspend";
+//     break;
+// }
+console.log("debug log:"+ vmDetails.name + " status:"+vmDetails.status)
   if (updated[ip].vms[vmId]?.details !== JSON.stringify(vmDetails)) {
     client.publish(
       `${env.MQTTBaseTopic}/switch/${serverTitleSanitised}/${vmSanitisedName}/config`,
       JSON.stringify({
         payload_on: "started",
         payload_off: "stopped",
-        value_template: "{{ value_json.status }}",
+        value_template: "{% if value_json.status == 'started' or value_json.status == 'resume' %} started {% else %} stopped {% endif %}",
         state_topic: `${env.MQTTBaseTopic}/${serverTitleSanitised}/${vmSanitisedName}`,
         json_attributes_topic: `${env.MQTTBaseTopic}/${serverTitleSanitised}/${vmSanitisedName}`,
         name: `VM`,
