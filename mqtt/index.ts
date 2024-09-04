@@ -170,17 +170,19 @@ export default function startMQTTClient() {
           case "started":
             if (
               vmDetails.status === "paused" ||
-              vmDetails.status === "pmsuspended" ||
               dockerDetails.status === "paused"
             ) {
               command = "domain-resume";
+            } else if(vmDetails.status === "pmsuspended"){
+              command = "domain-pmwakeup";
             } else {
               command = "domain-start";
             }
             break;
 
           case "stopped":
-            command = "domain-stop";
+            //for myself,I need pause
+            command = "domain-pause";
             break;
           case '"stopped"':
             command = "domain-stop";

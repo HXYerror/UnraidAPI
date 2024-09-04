@@ -5,7 +5,8 @@ export type VMAction =
   | "domain-resume"
   | "domain-pause"
   | "domain-destroy"
-  | "domain-pmsuspend";
+  | "domain-pmsuspend"
+  | "domain-pmwakeup";
 export interface RootServerJSONConfig {
   [key: string]: ServerJSONConfig;
 }
