@@ -697,6 +697,7 @@ function groupVmDetails(response, object) {
 async function simplifyResponse(object, ip: string, auth: string) {
   const temp = {};
   for (const vm of object) {
+    //console.log("debug log[simplifyResponse]:"+ vm.toString());
     let newVMObject = {} as VMData;
     newVMObject.name =
       vm.parent.children[0].children[1].children[1].children[0].contents;
@@ -704,8 +705,13 @@ async function simplifyResponse(object, ip: string, auth: string) {
       "vm-",
       ""
     );
-    newVMObject.status =
+    if(vm.parent.children[0].children[1].children[1].children[1].children[1].contents == "paused"){
+      newVMObject.status = "pmsuspended";
+    }else{
+      newVMObject.status =
       vm.parent.children[0].children[1].children[1].children[1].children[1].contents;
+    }
+
     newVMObject.icon =
       vm.parent.children[0].children[1].children[0].children[0].tags.src;
     newVMObject.coreCount = vm.parent.children[2].children[0].contents;
