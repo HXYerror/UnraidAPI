@@ -375,8 +375,8 @@ function getVMs(servers: RootServerJSONConfig, serverAuth: string) {
         let htmlDetails;
 
         writeTestFile(response.data, "virtualMachines.html");
-
         if (response.data.toString().includes("\u0000")) {
+          //console.log(JSON.stringify(response.data));
           const parts = response.data.toString().split("\u0000");
           htmlDetails = JSON.stringify(parts[0]);
           try {
@@ -393,7 +393,8 @@ function getVMs(servers: RootServerJSONConfig, serverAuth: string) {
           servers[ip].vm.details = await processVMResponse(
             details,
             ip,
-            serverAuth[ip]
+            serverAuth[ip],
+            servers[ip].vm.extras
           );
         } catch (error) {
           console.log("servers[ip].vm.details");
@@ -672,10 +673,10 @@ function hasChildren(remaining) {
   return remaining.indexOf("<") === 0 && remaining.indexOf("</") !== 0;
 }
 
-function processVMResponse(response, ip, auth) {
+function processVMResponse(response, ip, auth, VMextras ) {
   const object = [];
   groupVmDetails(response, object);
-  return simplifyResponse(object, ip, auth);
+  return simplifyResponse(object, ip, auth, VMextras);
 }
 
 function groupVmDetails(response, object) {
@@ -694,8 +695,15 @@ function groupVmDetails(response, object) {
   });
 }
 
-async function simplifyResponse(object, ip: string, auth: string) {
+async function simplifyResponse(object, ip: string, auth: string, VMextras) {
   const temp = {};
+  var regex = /{id:'([^']+)',state:'([^']+)'}/g;
+  var match;
+  var kvmMap = new Map();
+  while ((match = regex.exec(VMextras)) !== null) {    
+    kvmMap.set(match[1], match[2]);
+  }
+
   for (const vm of object) {
     //console.log("debug log[simplifyResponse]:"+ vm.toString());
     let newVMObject = {} as VMData;
@@ -705,11 +713,11 @@ async function simplifyResponse(object, ip: string, auth: string) {
       "vm-",
       ""
     );
-    if(vm.parent.children[0].children[1].children[1].children[1].children[1].contents == "paused"){
+    
+    newVMObject.status =
+    vm.parent.children[0].children[1].children[1].children[1].children[1].contents;
+    if(kvmMap.get(newVMObject.id) == "pmsuspended"){
       newVMObject.status = "pmsuspended";
-    }else{
-      newVMObject.status =
-      vm.parent.children[0].children[1].children[1].children[1].children[1].contents;
     }
 
     newVMObject.icon =
